@@ -15,8 +15,8 @@ type Character = {
 const route = useRoute()
 
 const query = gql`
-query getCharacter {
-  character(id: ${route.params.id}) {
+query getCharacter($id: ID!) {
+  character(id: $id) {
       name
       image
       status
@@ -28,11 +28,16 @@ query getCharacter {
     }
 }
   `
-  const { data, error } = await useAsyncQuery<Character>(query)
+  const { data, error } = await useAsyncQuery<Character>(query, {
+    id: route.params.id
+  })
 </script>
 
 <template>
-    <CharacterCard
+    <div>
+      <NuxtLink to="/" class="ml-3">Back</NuxtLink>
+
+      <CharacterCard
         :id="data.character.id"
         :name="data.character.name"
         :image="data.character.image"
@@ -40,4 +45,5 @@ query getCharacter {
         :species="data.character.species"
         :location="data.character.location.name"
     />
+    </div>
 </template>
